@@ -1,0 +1,41 @@
+// --- Función para la Geolocalización Real (Simulada) ---
+        function searchNearMe(query) {
+            if ("geolocation" in navigator) {
+                // Solicitar ubicación
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        alertMessage(`Ubicación encontrada: Latitud ${lat.toFixed(2)}, Longitud ${lon.toFixed(2)}. Buscando "${query}" cerca...`);
+                        
+                        // Aquí iría la lógica real para filtrar negocios con lat/lon
+                        // Por ahora, solo actualizamos el mensaje.
+                    },
+                    (error) => {
+                        let errorMessage = 'Error de geolocalización. ';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage += "Permiso denegado por el usuario.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage += "Información de ubicación no disponible.";
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage += "La solicitud expiró.";
+                                break;
+                            default:
+                                errorMessage += "Un error desconocido ocurrió.";
+                                break;
+                        }
+                        alertMessage(errorMessage, true);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                alertMessage("Tu navegador no soporta la geolocalización.", true);
+            }
+        }
